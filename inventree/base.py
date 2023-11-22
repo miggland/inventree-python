@@ -117,9 +117,11 @@ class InventreeObject(object):
         opts = cls.options(api)
 
         actions = opts.get('actions', {})
-        post = actions.get('POST', {})
-
-        return post
+        # Prefer POST fields, but fall back on PUT if POST is not allowed
+        if 'POST' in actions:
+            return actions.get('POST', {})
+        else:
+            return actions.get('PUT')
 
     @classmethod
     def fieldInfo(cls, field_name, api):
